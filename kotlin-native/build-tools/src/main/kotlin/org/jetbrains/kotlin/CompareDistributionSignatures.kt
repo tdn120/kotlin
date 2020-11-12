@@ -120,7 +120,7 @@ open class CompareDistributionSignatures : DefaultTask() {
         val oldKlibSignatures = getKlibSignatures(old).toSet()
         return CompareDiff(
                 newKlibSignatures - oldKlibSignatures,
-                oldKlibSignatures - newKlibSignatures,
+                oldKlibSignatures - newKlibSignatures
         )
     }
 }
