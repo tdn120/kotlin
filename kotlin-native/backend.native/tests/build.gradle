@@ -3,7 +3,7 @@
  * that can be found in the LICENSE file.
  */
 
-import shadow.org.jetbrains.kotlin.gradle.plugin.tasks.KonanCompileNativeBinary
+import org.jetbrains.kotlin.gradle.plugin.tasks.KonanCompileNativeBinary
 import org.jetbrains.kotlin.*
 import org.jetbrains.kotlin.konan.target.Family
 import org.jetbrains.kotlin.konan.target.KonanTarget
@@ -18,24 +18,12 @@ buildscript {
             url 'https://cache-redirector.jetbrains.com/maven-central'
         }
         mavenCentral()
-        maven {
-            url buildKotlinCompilerRepo
-        }
 	    maven {
-            url kotlinCompilerRepo
+            url project.bootstrapKotlinRepo
         }
     }
 
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-native-gradle-plugin:$gradlePluginVersion"
-    }
-    ext.useCustomDist = project.hasProperty("kotlin.native.home") ||
-            project.hasProperty("org.jetbrains.kotlin.native.home") ||
-            project.hasProperty("konan.home")
-    ext.kotlinNativeDist = project.findProperty("kotlin.native.home")
-            ?: project.findProperty("org.jetbrains.kotlin.native.home")
-            ?: project.findProperty("konan.home")
-            ?: distDir.absolutePath
+    ext.useCustomDist = project.hasProperty("konan.home")
     if (!useCustomDist) {
         ext.setProperty("kotlin.native.home", distDir.absolutePath)
         ext.setProperty("org.jetbrains.kotlin.native.home", distDir.absolutePath)
@@ -50,18 +38,15 @@ configurations {
     cli_bc
     update_tests
     update_stdlib_tests
-}
 
-repositories {
-    ivy {
-        ivyPattern      'https://teamcity.jetbrains.com/guestAuth/repository/download/[module]/[revision]/teamcity-ivy.xml'
-        artifactPattern 'https://teamcity.jetbrains.com/guestAuth/repository/download/[module]/[revision]/[artifact](.[ext])'
-    }
+    compile
+    nopPluginCompile
+    compile.extendsFrom nopPluginCompile
 }
 
 dependencies {
     compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.7'
-    cli_bc project(path: ':backend.native', configuration: 'cli_bc')
+    cli_bc project(path: ':kotlin-native:backend.native', configuration: 'cli_bc')
     def updateTestData = true
     if (project.hasProperty("kotlinProjectPath")) {
         def kotlinProj = project.property("kotlinProjectPath").toString()
@@ -80,20 +65,6 @@ dependencies {
             println("WARNING: using stdlib tests provided by gradle.properties. Please execute :kotlin:zipTestData")
         }
     }
-    if (updateTestData) {
-        update_tests(group: 'org', name: 'Kotlin_KotlinPublic_Compiler', version: testKotlinCompilerVersion) {
-            artifact {
-                name = 'internal/kotlin-test-data'
-                type = 'zip'
-            }
-        }
-        update_stdlib_tests (group: 'org',  name: 'Kotlin_KotlinPublic_Compiler', version: kotlinStdlibTestsVersion) {
-            artifact {
-                name = 'internal/kotlin-stdlib-tests'
-                type = 'zip'
-            }
-        }
-    }
 }
 ext.testOutputRoot = rootProject.file("test.output").absolutePath
 ext.externalTestsDir = project.file("build/external")
@@ -101,10 +72,10 @@ ext.externalStdlibTestsDir = project.file("build/stdlib_external/stdlib")
 externalTestsDir.mkdirs()
 externalStdlibTestsDir.mkdirs()
 
-ext.platformManager = project.rootProject.platformManager
+ext.platformManager = project.project(":kotlin-native").platformManager
 ext.target = platformManager.targetManager(project.testTarget).target
 
-ext.testLibraryDir = "${ext.kotlinNativeDist}/klib/platform/${project.target.name}"
+ext.testLibraryDir = "${project.kotlinNativeDist}/klib/platform/${project.target.name}"
 
 // Add executor to run tests depending on a target
 project.convention.plugins.executor = ExecutorServiceKt.create(project)
@@ -195,7 +166,7 @@ konanArtifacts {
 task installTestLibrary(type: KlibInstall) {
     dependsOn compileKonanTestLibraryHost
     klib = konanArtifacts.testLibrary.getArtifactByTarget('host')
-    repo = rootProject.file(testLibraryDir)
+    repo = rootProject.project(":kotlin-native").file(testLibraryDir)
 
     doLast {
         // Remove the version in build/, so that we don't link two copies.
@@ -231,7 +202,6 @@ def update_external_tests() {
     def stdlibTestsFiles = configurations.update_stdlib_tests.asFileTree
     copy {
         stdlibTestsFiles.each {
-            from(zipTree(it))
             into(externalStdlibTestsDir)
             include 'common/**'
             include 'test/**'
@@ -272,12 +242,7 @@ run {
 }
 
 task sanity {
-    doFirst {
-        if (!project.hasProperty("test.disable_update")) {
-            update_external_tests()
-        }
-    }
-    def platformLibsTasks = targetList.collect { ":${it}PlatformLibs" } + ":distPlatformLibs"
+    def platformLibsTasks = targetList.collect { ":kotlin-native:${it}PlatformLibs" } + ":distPlatformLibs"
     dependsOn(tasksOf(KonanTest) { task ->
         task.getDependsOn().every { !platformLibsTasks.contains(it) } &&
         task.name != "library_mismatch" // This test requires the wasm32 stdlib which is unavailable during a sanity run.
@@ -4506,7 +4471,7 @@ Task frameworkTest(String name, Closure<FrameworkTest> configurator) {
                         }
 
                         if (!useCustomDist) {
-                            dependsOn ":${target.name}CrossDistRuntime", ':distCompiler'
+                            dependsOn ":kotlin-native:${target.name}CrossDistRuntime", ':kotlin-native:distCompiler'
                         }
 
                         extraOpts fr.bitcode ? "-Xembed-bitcode" : "-Xembed-bitcode-marker"
@@ -4557,7 +4522,7 @@ if (isAppleTarget(project)) {
                 artifactName "test-library"
 
                 if (!useCustomDist) {
-                    dependsOn ":${target.name}CrossDistRuntime", ':distCompiler'
+                    dependsOn ":kotlin-native:${target.name}CrossDistRuntime", ':kotlin-native:distCompiler'
                 }
 
                 extraOpts "-Xshort-module-name=MyLibrary"
@@ -4583,7 +4548,7 @@ if (isAppleTarget(project)) {
                 artifactName "test-library"
 
                 if (!useCustomDist) {
-                    dependsOn ":${target.name}CrossDistRuntime", ':distCompiler'
+                    dependsOn ":kotlin-native:${target.name}CrossDistRuntime", ':kotlin-native:distCompiler'
                 }
 
                 extraOpts "-Xshort-module-name=MyLibrary"
@@ -4860,11 +4825,13 @@ task override_konan_properties0(type: KonanDriverTest) {
  */
 KotlinNativeTestKt.createTest(project, 'stdlibTest', KonanGTest) { task ->
     def sources = UtilsKt.getFilesToCompile(project,
-            [ 'build/stdlib_external/stdlib', 'stdlib_external/utils.kt',
-                                 'stdlib_external/collections',
-                                 'stdlib_external/jsCollectionFactoriesActuals.kt',
-                                 'stdlib_external/text/StringEncodingTestNative.kt'],
-            [ 'build/stdlib_external/stdlib/test/internalAnnotations.kt' ])
+            [ '../../../libraries/stdlib/common/test',
+              '../../../libraries/stdlib/test',
+              '../../../libraries/kotlin.test/common/src/test/kotlin',
+              'stdlib_external/utils.kt',
+              'stdlib_external/jsCollectionFactoriesActuals.kt',
+              'stdlib_external/text/StringEncodingTestNative.kt'],
+            [ /*'build/stdlib_external/stdlib/test/internalAnnotations.kt'*/ ])
 
     konanArtifacts {
         program('stdlibTest', targets: [target.name]) {
@@ -4941,6 +4908,13 @@ sourceSets {
             srcDir 'debugger/src/test/kotlin'
         }
     }
+    update_stdlib_tests{
+        kotlin {
+            srcDir '../../../libraries/stdlib/common/test'
+            srcDir '../../../libraries/stdlib/test'
+            srcDir '../../../libraries/kotlin.test/common/src/test/kotlin'
+        }
+    }
 }
 
 Task pluginTest(String name, String pluginName, Closure configureClosure) {
@@ -4976,9 +4950,22 @@ pluginTest("runtime_basic_init", "nopPlugin") {
 }
 
 dependencies {
-    nopPluginCompile kotlinCompilerModule
-    compile kotlinCompilerModule
-    compile project(path: ':backend.native', configuration: 'cli_bc')
+    nopPluginCompile project(kotlinCompilerModule)
+    nopPluginCompile project(":native:kotlin-native-utils")
+    nopPluginCompile project(":core:descriptors")
+    nopPluginCompile project(":compiler:ir.tree")
+    nopPluginCompile project(":compiler:ir.tree.impl")
+    nopPluginCompile project(":compiler:ir.backend.common")
+    nopPluginCompile project(":compiler:util")
+    nopPluginCompile project(":native:frontend.native")
+    nopPluginCompile project(":compiler:cli-common")
+    nopPluginCompile project(":compiler:cli")
+    nopPluginCompile project(":kotlin-util-klib")
+    nopPluginCompile project(":kotlin-util-klib-metadata")
+    nopPluginCompile project(":compiler:ir.serialization.common")
+
+    compile project(kotlinCompilerModule)
+    compile project(path: ':kotlin-native:backend.native', configuration: 'cli_bc')
     compile 'junit:junit:4.12'
 }
 
