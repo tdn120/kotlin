@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "org.jetbrains.kotlin"
-version = "0.0.21"
+version = "0.0.22"
 
 repositories {
     mavenCentral()
