@@ -241,6 +241,10 @@ object BuilderConfigurator : AbstractBuilderConfigurator<FirTreeBuilder>(FirTree
             withCopy()
         }
 
+        builder(multiCatchTypeRef) {
+            withCopy()
+        }
+
         builder(breakExpression) {
             parents += loopJumpBuilder
         }

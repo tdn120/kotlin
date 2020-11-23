@@ -409,12 +409,13 @@ class RawFirBuilder(
                     KtStubElementTypes.TYPE_REFERENCE.arrayFactory
                 )
                 returnTypeRef = when {
-                    isCatchParameter && typeRefs.isNotEmpty() -> {
-                        FirMultiCatchTypeRef(
-                            typeRefs.map { it.toFirOrErrorType() }.toMutableList(),
-                            toFirSourceElement()
-                        )
-                    }
+                    isCatchParameter && typeRefs.size > 1 ->
+                        buildMultiCatchTypeRef {
+                            source = toFirSourceElement()
+                            types.addAll(
+                                typeRefs.map { it.toFirOrErrorType() }
+                            )
+                        }
                     typeReference != null -> typeReference.toFirOrErrorType()
                     defaultTypeRef != null -> defaultTypeRef
                     else -> null.toFirOrImplicitType()

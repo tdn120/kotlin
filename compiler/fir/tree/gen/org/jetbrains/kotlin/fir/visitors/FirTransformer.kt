@@ -125,6 +125,7 @@ import org.jetbrains.kotlin.fir.types.FirUserTypeRef
 import org.jetbrains.kotlin.fir.types.FirDynamicTypeRef
 import org.jetbrains.kotlin.fir.types.FirFunctionTypeRef
 import org.jetbrains.kotlin.fir.types.FirImplicitTypeRef
+import org.jetbrains.kotlin.fir.types.FirMultiCatchTypeRef
 import org.jetbrains.kotlin.fir.contracts.FirEffectDeclaration
 import org.jetbrains.kotlin.fir.contracts.FirContractDescription
 import org.jetbrains.kotlin.fir.contracts.FirLegacyRawContractDescription
@@ -615,6 +616,10 @@ abstract class FirTransformer<in D> : FirVisitor<CompositeTransformResult<FirEle
 
     open fun transformImplicitTypeRef(implicitTypeRef: FirImplicitTypeRef, data: D): CompositeTransformResult<FirTypeRef> {
         return transformElement(implicitTypeRef, data)
+    }
+
+    open fun transformMultiCatchTypeRef(multiCatchTypeRef: FirMultiCatchTypeRef, data: D): CompositeTransformResult<FirTypeRef> {
+        return transformElement(multiCatchTypeRef, data)
     }
 
     open fun transformEffectDeclaration(effectDeclaration: FirEffectDeclaration, data: D): CompositeTransformResult<FirEffectDeclaration> {
@@ -1115,6 +1120,10 @@ abstract class FirTransformer<in D> : FirVisitor<CompositeTransformResult<FirEle
 
     final override fun visitImplicitTypeRef(implicitTypeRef: FirImplicitTypeRef, data: D): CompositeTransformResult<FirTypeRef> {
         return transformImplicitTypeRef(implicitTypeRef, data)
+    }
+
+    final override fun visitMultiCatchTypeRef(multiCatchTypeRef: FirMultiCatchTypeRef, data: D): CompositeTransformResult<FirTypeRef> {
+        return transformMultiCatchTypeRef(multiCatchTypeRef, data)
     }
 
     final override fun visitEffectDeclaration(effectDeclaration: FirEffectDeclaration, data: D): CompositeTransformResult<FirEffectDeclaration> {

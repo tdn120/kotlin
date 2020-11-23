@@ -24,7 +24,6 @@ import org.jetbrains.kotlin.fir.symbols.impl.FirClassLikeSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirNamedFunctionSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirPropertySymbol
 import org.jetbrains.kotlin.fir.types.*
-import org.jetbrains.kotlin.fir.types.impl.FirMultiCatchTypeRef
 import org.jetbrains.kotlin.fir.visitors.FirVisitorVoid
 import org.jetbrains.kotlin.name.SpecialNames
 import org.jetbrains.kotlin.types.Variance
@@ -850,11 +849,6 @@ class FirRenderer(builder: StringBuilder, private val mode: RenderMode = RenderM
 
     override fun visitTypeRef(typeRef: FirTypeRef) {
         typeRef.annotations.renderAnnotations()
-        if (typeRef is FirMultiCatchTypeRef) {
-            typeRef.types.forEach {
-                it.accept(this)
-            }
-        }
         visitElement(typeRef)
     }
 
@@ -943,6 +937,17 @@ class FirRenderer(builder: StringBuilder, private val mode: RenderMode = RenderM
 
     override fun visitStarProjection(starProjection: FirStarProjection) {
         print("*")
+    }
+
+    override fun visitMultiCatchTypeRef(multiCatchTypeRef: FirMultiCatchTypeRef) {
+        val types = multiCatchTypeRef.types
+        val lastIndex = types.lastIndex
+        types.forEachIndexed { i, type ->
+            type.accept(this)
+            if (i != lastIndex) {
+                print(", ")
+            }
+        }
     }
 
     private fun AbstractFirBasedSymbol<*>.render(): String {
