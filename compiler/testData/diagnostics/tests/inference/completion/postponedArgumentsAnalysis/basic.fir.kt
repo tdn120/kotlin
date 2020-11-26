@@ -222,7 +222,7 @@ fun main() {
 
     // Anonymous functions
     val x69: (C) -> Unit = selectB({ it }, { }, id(fun (x) { <!DEBUG_INFO_EXPRESSION_TYPE("A")!>x<!> }))
-    select(id1(fun(it) { <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Int")!>it<!>.inv() }), id1 { x: Number -> TODO() }, id1(id2(::takeInt)))
+    select(id1(fun(it) { <!DEBUG_INFO_EXPRESSION_TYPE("TypeVariable(_RP0)")!>it<!>.<!UNRESOLVED_REFERENCE!>inv<!>() }), id1 { x: Number -> TODO() }, id1(id2(::takeInt)))
     select(id(fun (it) { <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Int")!>it<!> }), id(id<(Int) -> Unit> { x: Number -> Unit }))
     select(id(fun (it) { <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Int")!>it<!>.inv() }), id<(Int) -> Unit> { })
     val x70: (Int) -> Unit = selectNumber(id(fun (it) { }), id {}, id {})
