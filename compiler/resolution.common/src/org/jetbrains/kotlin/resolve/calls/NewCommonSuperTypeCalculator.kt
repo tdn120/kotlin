@@ -75,6 +75,35 @@ object NewCommonSuperTypeCalculator {
         return createFlexibleType(lowerSuperType, upperSuperType)
     }
 
+    private enum class NullabilityMode {
+        ALL_NOT_NULL,
+        TYPE_PARAMETERS_AND_VARIABLES,
+        NOT_ALL_NOT_NULL
+    }
+
+    private fun TypeSystemCommonSuperTypesContext.computeNullabilityMode(
+        types: List<SimpleTypeMarker>,
+        contextStubTypesEqualToAnything: AbstractTypeCheckerContext
+    ): NullabilityMode {
+        var result = NullabilityMode.ALL_NOT_NULL
+        var typeParametersOnly = true
+        for (type in types) {
+            if (isStubRelatedType(type)) continue
+            if (result != NullabilityMode.ALL_NOT_NULL ||
+                !AbstractNullabilityChecker.isSubtypeOfAny(contextStubTypesEqualToAnything, type)
+            ) {
+                if (typeParametersOnly && type.typeConstructor() is TypeParameterMarker) {
+                    result = NullabilityMode.TYPE_PARAMETERS_AND_VARIABLES
+                } else {
+                    return NullabilityMode.NOT_ALL_NOT_NULL
+                }
+            } else if (type.typeConstructor() !is TypeParameterMarker) {
+                typeParametersOnly = false
+            }
+        }
+        return result
+    }
+
     private fun TypeSystemCommonSuperTypesContext.commonSuperTypeForSimpleTypes(
         types: List<SimpleTypeMarker>,
         depth: Int,
@@ -86,12 +115,11 @@ object NewCommonSuperTypeCalculator {
         }
 
         // i.e. result type also should be marked nullable
-        val notAllNotNull =
-            types.any { !isStubRelatedType(it) && !AbstractNullabilityChecker.isSubtypeOfAny(contextStubTypesEqualToAnything, it) }
-        val notNullTypes = if (notAllNotNull) types.map { it.withNullability(false) } else types
+        val nullabilityMode = computeNullabilityMode(types, contextStubTypesEqualToAnything)
+        val notNullTypes = if (nullabilityMode == NullabilityMode.NOT_ALL_NOT_NULL) types.map { it.withNullability(false) } else types
 
         val commonSuperType = commonSuperTypeForNotNullTypes(notNullTypes, depth, contextStubTypesEqualToAnything, contextStubTypesNotEqual)
-        return if (notAllNotNull)
+        return if (nullabilityMode == NullabilityMode.NOT_ALL_NOT_NULL)
             refineNullabilityForUndefinedNullability(types, commonSuperType) ?: commonSuperType.withNullability(true)
         else
             commonSuperType
