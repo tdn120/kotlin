@@ -197,23 +197,6 @@ fun runWithK2JVMCompiler(
     }
 }
 
-private fun assertMatchesAll(
-    expectedOutPatterns: List<String>,
-    outLines: List<String>
-) {
-    Assert.assertEquals(
-        "Expecting pattern:\n  ${expectedOutPatterns.joinToString("\n  ")}\nGot:\n  ${outLines.joinToString("\n  ")}",
-        expectedOutPatterns.size, outLines.size
-    )
-    for ((expectedPattern, actualLine) in expectedOutPatterns.zip(outLines)) {
-        Assert.assertTrue(
-            "line \"$actualLine\" do not match with expected pattern \"$expectedPattern\"",
-            Regex(expectedPattern).matches(actualLine)
-        )
-    }
-}
-
-
 internal fun <T> captureOutErrRet(body: () -> T): Triple<String, String, T> {
     val outStream = ByteArrayOutputStream()
     val errStream = ByteArrayOutputStream()
