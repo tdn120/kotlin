@@ -1,0 +1,25 @@
+FILE: fromDfaModel.kt
+    public abstract interface MyInterface : R|kotlin/Any| {
+    }
+    public final class MyGoodClass : R|MyInterface| {
+        public constructor(): R|MyGoodClass| {
+            super<R|kotlin/Any|>()
+        }
+
+    }
+    public final class MyBadClass : R|MyInterface| {
+        public constructor(): R|MyBadClass| {
+            super<R|kotlin/Any|>()
+        }
+
+    }
+    @R|kotlin/OptIn|(vararg(<getClass>(Q|kotlin/contracts/ExperimentalContracts|))) public final fun R|MyInterface|.isGood(): R|kotlin/Boolean|
+        [R|Contract description]
+         <
+            Returns(TRUE) -> this is MyGoodClass
+            Returns(FALSE) -> this is MyBadClass
+        >
+     {
+        [StubStatement]
+        ^isGood (this@R|/isGood| is R|MyGoodClass|)
+    }

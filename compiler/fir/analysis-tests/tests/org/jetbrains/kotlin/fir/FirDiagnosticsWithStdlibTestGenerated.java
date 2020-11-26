@@ -618,6 +618,11 @@ public class FirDiagnosticsWithStdlibTestGenerated extends AbstractFirDiagnostic
                         KotlinTestUtils.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("compiler/fir/analysis-tests/testData/resolveWithStdlib/contracts/fromSource/bad/returnsImplies"), Pattern.compile("^([^.]+)\\.kt$"), null, true);
                     }
 
+                    @TestMetadata("fromDfaModel.kt")
+                    public void testFromDfaModel() throws Exception {
+                        runTest("compiler/fir/analysis-tests/testData/resolveWithStdlib/contracts/fromSource/bad/returnsImplies/fromDfaModel.kt");
+                    }
+
                     @TestMetadata("notNull.kt")
                     public void testNotNull() throws Exception {
                         runTest("compiler/fir/analysis-tests/testData/resolveWithStdlib/contracts/fromSource/bad/returnsImplies/notNull.kt");
