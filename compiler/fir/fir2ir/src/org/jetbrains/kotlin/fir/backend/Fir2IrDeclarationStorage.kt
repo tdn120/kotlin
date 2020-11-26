@@ -1218,7 +1218,7 @@ class Fir2IrDeclarationStorage(
 
     private fun IrMutableAnnotationContainer.convertAnnotationsFromLibrary(firAnnotationContainer: FirAnnotationContainer) {
         if ((firAnnotationContainer as? FirDeclaration)?.isFromLibrary == true) {
-            annotationGenerator?.generate(this, firAnnotationContainer)
+            annotationGenerator.generate(this, firAnnotationContainer)
         }
     }
 

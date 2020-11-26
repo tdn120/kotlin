@@ -140,6 +140,7 @@ public actual annotation class JvmWildcard
  * Adding and removing the annotation is binary incompatible change, since inline classes' methods and functions with inline classes
  * in their signature are mangled.
  */
+@Suppress("NEWER_VERSION_IN_SINCE_KOTLIN")
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.BINARY)
 @MustBeDocumented
