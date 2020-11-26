@@ -127,6 +127,10 @@ tasks.validatePlugins.configure {
     enabled = false
 }
 
+java {
+    disableAutoTargetJvm()
+}
+
 dependencies {
     implementation(kotlin("stdlib", embeddedKotlinVersion))
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:${project.bootstrapKotlinVersion}")
