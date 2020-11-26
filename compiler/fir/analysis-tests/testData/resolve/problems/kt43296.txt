@@ -1,0 +1,19 @@
+FILE: kt43296.kt
+    public abstract interface Slice<V> : R|kotlin/Any| {
+    }
+    public abstract interface A : R|kotlin/Any| {
+    }
+    public final val SL0: R|Slice<out A>| = R|kotlin/TODO|()
+        public get(): R|Slice<out A>|
+    public final fun <X> foo(s: R|Slice<X>|): R|X?| {
+        when () {
+            ===(R|<local>/s|, R|/SL0|) ->  {
+                ^foo <Inapplicable(INAPPLICABLE): /bar>#<R|A|>(R|<local>/s|)
+            }
+        }
+
+        ^foo Null(null)
+    }
+    public final fun <Y> bar(w: R|Slice<Y>|): R|Y?| {
+        ^bar Null(null)
+    }
