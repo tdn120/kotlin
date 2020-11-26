@@ -31,7 +31,7 @@ class NamedCompilerPhase<in Context : CommonBackendContext, Data>(
                 lower.invoke(phaseConfig, phaserState, context, input)
             }
         }
-        <!INAPPLICABLE_CANDIDATE!>runAfter<!>(phaseConfig, phaserState, context, output)
+        runAfter(phaseConfig, phaserState, context, output)
     }
 
     private fun runAfter(phaseConfig: PhaseConfig, phaserState: PhaserState<Data>, context: Context, output: Data) {
