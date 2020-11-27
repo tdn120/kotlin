@@ -29,7 +29,7 @@ object InlineClassDeclarationChecker : DeclarationChecker {
         require(inlineKeyword != null) { "Declaration of inline class must have 'inline' keyword" }
 
         val trace = context.trace
-        if (descriptor.isInner || descriptor.containingDeclaration is FunctionDescriptor) {
+        if (descriptor.isInner || DescriptorUtils.isLocal(descriptor)) {
             trace.report(Errors.INLINE_CLASS_NOT_TOP_LEVEL.on(inlineKeyword))
             return
         }

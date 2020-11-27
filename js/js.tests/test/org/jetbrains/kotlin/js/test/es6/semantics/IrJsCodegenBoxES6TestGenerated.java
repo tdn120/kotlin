@@ -12077,6 +12077,11 @@ public class IrJsCodegenBoxES6TestGenerated extends AbstractIrJsCodegenBoxES6Tes
             runTest("compiler/testData/codegen/box/inlineClasses/mangledSuperCalls.kt");
         }
 
+        @TestMetadata("nestedInlineClass.kt")
+        public void testNestedInlineClass() throws Exception {
+            runTest("compiler/testData/codegen/box/inlineClasses/nestedInlineClass.kt");
+        }
+
         @TestMetadata("noAssertionsOnInlineClassBasedOnNullableType.kt")
         public void testNoAssertionsOnInlineClassBasedOnNullableType() throws Exception {
             runTest("compiler/testData/codegen/box/inlineClasses/noAssertionsOnInlineClassBasedOnNullableType.kt");
