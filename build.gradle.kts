@@ -854,6 +854,8 @@ tasks {
 
     register("kaptIdeTest") {
         dependsOn(":kotlin-annotation-processing:test")
+        dependsOn(":kotlin-annotation-processing-base:test")
+        dependsOn(":kotlin-annotation-processing-cli:test")
     }
 
     register("gradleIdeTest") {

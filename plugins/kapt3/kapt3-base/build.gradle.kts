@@ -8,7 +8,7 @@ dependencies {
     compileOnly(toolsJarApi())
 
     testCompile(commonDep("junit:junit"))
-    testCompileOnly(toolsJarApi())
+    testImplementation(toolsJarApi())
 }
 
 sourceSets {
