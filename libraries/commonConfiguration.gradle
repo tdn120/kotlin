@@ -34,6 +34,12 @@ ext.configureJvm6Project = { Project project ->
             executable = "$JDK_16/bin/java"
         }
     }
+
+    project.tasks.withType(org.jetbrains.kotlin.gradle.dsl.KotlinCompile.class) { task ->
+        task.kotlinOptions {
+            allWarningsAsErrors = true
+        }
+    }
 }
 
 ext.compileJava9Sources = { Project project, String moduleName, Collection<FileCollection> moduleOutputs = [project.sourceSets.main.output] ->

@@ -319,6 +319,17 @@ extra["compilerModulesForJps"] = listOf(
     ":compiler:compiler.version"
 )
 
+// TODO: fix remaining warnings and remove this property.
+extra["tasksWithWarnings"] = listOf(
+    ":compiler:fir:tree:compileKotlin",
+    ":compiler:fir:resolve:compileKotlin",
+    ":compiler:fir:checkers:compileKotlin",
+    ":compiler:fir:java:compileKotlin",
+    ":plugins:uast-kotlin:compileKotlin",
+    ":plugins:uast-kotlin:compileTestKotlin",
+    ":plugins:uast-kotlin-idea:compileKotlin"
+)
+
 val coreLibProjects = listOfNotNull(
     ":kotlin-stdlib",
     ":kotlin-stdlib-common",
