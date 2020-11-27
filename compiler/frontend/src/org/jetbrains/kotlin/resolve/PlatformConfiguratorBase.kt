@@ -28,6 +28,7 @@ private val DEFAULT_DECLARATION_CHECKERS = listOf(
     SuspendLimitationsChecker,
     InlineClassDeclarationChecker,
     PropertiesWithBackingFieldsInsideInlineClass(),
+    VarPropertiesWithValueClassReceiver(),
     AnnotationClassTargetAndRetentionChecker(),
     ReservedMembersAndConstructsForInlineClass(),
     ResultClassInReturnTypeChecker(),

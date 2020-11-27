@@ -124,6 +124,20 @@ class PropertiesWithBackingFieldsInsideInlineClass : DeclarationChecker {
     }
 }
 
+class VarPropertiesWithValueClassReceiver : DeclarationChecker {
+    override fun check(declaration: KtDeclaration, descriptor: DeclarationDescriptor, context: DeclarationCheckerContext) {
+        if (declaration !is KtProperty) return
+        if (descriptor !is PropertyDescriptor) return
+        if (!descriptor.isVar) return
+
+        if (descriptor.containingDeclaration.isInlineClass() ||
+            descriptor.extensionReceiverParameter?.type?.isInlineClassType() == true
+        ) {
+            context.trace.report(Errors.RESERVED_VAR_PROPERTY_OF_VALUE_CLASS.on(declaration.valOrVarKeyword))
+        }
+    }
+}
+
 class ReservedMembersAndConstructsForInlineClass : DeclarationChecker {
 
     companion object {
