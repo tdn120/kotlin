@@ -57,7 +57,8 @@ externalStdlibTestsDir.mkdirs()
 ext.platformManager = project.project(":kotlin-native").platformManager
 ext.target = platformManager.targetManager(project.testTarget).target
 
-ext.testLibraryDir = "${project.kotlinNativeDist}/klib/platform/${project.target.name}"
+//ext.testLibraryDir = "${project.kotlinNativeDist}/klib/platform/${project.target.name}"
+ext.testLibraryDir = "${rootProject.file("dist")}/klib/platform/${project.target.name}"
 
 // Add executor to run tests depending on a target
 project.convention.plugins.executor = ExecutorServiceKt.create(project)
