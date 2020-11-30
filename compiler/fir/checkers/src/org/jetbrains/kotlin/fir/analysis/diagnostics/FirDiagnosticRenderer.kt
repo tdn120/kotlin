@@ -12,7 +12,7 @@ interface FirDiagnosticRenderer<D : FirDiagnostic<*>> : DiagnosticRenderer<D> {
     override fun render(diagnostic: D): String
 }
 
-class SimpleFirDiagnosticRenderer<E : FirSourceElement>(private val message: String) : FirDiagnosticRenderer<FirSimpleDiagnostic<E>> {
+class SimpleFirDiagnosticRenderer<E : FirSourceElement>(val message: String) : FirDiagnosticRenderer<FirSimpleDiagnostic<E>> {
     override fun render(diagnostic: FirSimpleDiagnostic<E>): String {
         return message
     }
