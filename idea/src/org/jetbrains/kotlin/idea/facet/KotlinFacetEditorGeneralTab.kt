@@ -245,10 +245,10 @@ class KotlinFacetEditorGeneralTab(
             }
             val emptyArguments = argumentClass.newInstance()
             val fieldNamesToCheck = when {
-                platform.isJvm() -> jvmUIExposedFields
-                platform.isJs() -> jsUIExposedFields
-                platform.isCommon() -> metadataUIExposedFields
-                else -> commonUIExposedFields
+                platform.isJvm() -> jvmUIExposedFieldNames
+                platform.isJs() -> jsUIExposedFieldNames
+                platform.isCommon() -> metadataUIExposedFieldNames
+                else -> commonUIExposedFieldNames
             }
 
             val propertiesToCheck = collectProperties(argumentClass.kotlin, false).filter { it.name in fieldNamesToCheck }
