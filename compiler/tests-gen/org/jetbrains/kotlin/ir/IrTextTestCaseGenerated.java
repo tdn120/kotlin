@@ -1171,6 +1171,11 @@ public class IrTextTestCaseGenerated extends AbstractIrTextTestCase {
             runTest("compiler/testData/ir/irText/expressions/membersImportedFromObject.kt");
         }
 
+        @TestMetadata("multicatch.kt")
+        public void testMulticatch() throws Exception {
+            runTest("compiler/testData/ir/irText/expressions/multicatch.kt");
+        }
+
         @TestMetadata("multipleThisReferences.kt")
         public void testMultipleThisReferences() throws Exception {
             runTest("compiler/testData/ir/irText/expressions/multipleThisReferences.kt");

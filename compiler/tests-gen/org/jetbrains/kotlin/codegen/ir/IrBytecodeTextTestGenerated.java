@@ -294,6 +294,11 @@ public class IrBytecodeTextTestGenerated extends AbstractIrBytecodeTextTest {
         runTest("compiler/testData/codegen/bytecodeText/maxStackAfterOptimizations.kt");
     }
 
+    @TestMetadata("multicatch.kt")
+    public void testMulticatch() throws Exception {
+        runTest("compiler/testData/codegen/bytecodeText/multicatch.kt");
+    }
+
     @TestMetadata("noAccessorForProtectedInSamePackageCrossinline.kt")
     public void testNoAccessorForProtectedInSamePackageCrossinline() throws Exception {
         runTest("compiler/testData/codegen/bytecodeText/noAccessorForProtectedInSamePackageCrossinline.kt");

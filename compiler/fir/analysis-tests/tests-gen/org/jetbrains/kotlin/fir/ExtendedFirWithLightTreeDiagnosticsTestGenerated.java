@@ -38,6 +38,11 @@ public class ExtendedFirWithLightTreeDiagnosticsTestGenerated extends AbstractEx
         runTest("compiler/fir/analysis-tests/testData/extendedCheckers/CanBeValChecker.kt");
     }
 
+    @TestMetadata("multicatch.kt")
+    public void testMulticatch() throws Exception {
+        runTest("compiler/fir/analysis-tests/testData/extendedCheckers/multicatch.kt");
+    }
+
     @TestMetadata("RedundantExplicitTypeChecker.kt")
     public void testRedundantExplicitTypeChecker() throws Exception {
         runTest("compiler/fir/analysis-tests/testData/extendedCheckers/RedundantExplicitTypeChecker.kt");

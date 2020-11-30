@@ -332,6 +332,11 @@ public class LightTree2FirConverterTestCaseGenerated extends AbstractLightTree2F
             runTest("compiler/fir/raw-fir/psi2fir/testData/rawBuilder/expressions/modifications.kt");
         }
 
+        @TestMetadata("multicatch.kt")
+        public void testMulticatch() throws Exception {
+            runTest("compiler/fir/raw-fir/psi2fir/testData/rawBuilder/expressions/multicatch.kt");
+        }
+
         @TestMetadata("namedArgument.kt")
         public void testNamedArgument() throws Exception {
             runTest("compiler/fir/raw-fir/psi2fir/testData/rawBuilder/expressions/namedArgument.kt");
