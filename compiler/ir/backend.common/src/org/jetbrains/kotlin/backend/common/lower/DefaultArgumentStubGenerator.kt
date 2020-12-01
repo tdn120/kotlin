@@ -514,7 +514,7 @@ private fun IrFunction.generateDefaultsFunction(
                             forceSetOverrideSymbols,
                             visibility,
                             useConstructorMarker,
-                            copiedAnnotations
+                            it.owner.copyAnnotations()
                         )?.symbol as IrSimpleFunctionSymbol?
                     }
                 }
