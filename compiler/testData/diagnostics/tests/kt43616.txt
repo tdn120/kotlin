@@ -1,0 +1,41 @@
+package
+
+public inline fun </*0*/ R, /*1*/ D> PhaserState<D>.downlevel(/*0*/ nlevels: kotlin.Int, /*1*/ block: () -> R): R
+
+public interface CommonBackendContext {
+    public open override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
+    public open override /*1*/ /*fake_override*/ fun hashCode(): kotlin.Int
+    public open override /*1*/ /*fake_override*/ fun toString(): kotlin.String
+}
+
+public interface CompilerPhase</*0*/ in Context : CommonBackendContext, /*1*/ Input, /*2*/ Output> {
+    public open override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
+    public open override /*1*/ /*fake_override*/ fun hashCode(): kotlin.Int
+    public abstract fun invoke(/*0*/ phaseConfig: PhaseConfig, /*1*/ phaserState: PhaserState<Input>, /*2*/ context: Context, /*3*/ input: Input): Output
+    public open override /*1*/ /*fake_override*/ fun toString(): kotlin.String
+}
+
+public final class NamedCompilerPhase</*0*/ in Context : CommonBackendContext, /*1*/ Data> : CompilerPhase<Context, Data, Data> {
+    public constructor NamedCompilerPhase</*0*/ in Context : CommonBackendContext, /*1*/ Data>(/*0*/ lower: CompilerPhase<Context, Data, Data>)
+    private final val lower: CompilerPhase<Context, Data, Data>
+    public open override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
+    public open override /*1*/ /*fake_override*/ fun hashCode(): kotlin.Int
+    public open override /*1*/ fun invoke(/*0*/ phaseConfig: PhaseConfig, /*1*/ phaserState: PhaserState<Data>, /*2*/ context: Context, /*3*/ input: Data): Data
+    private final fun runAfter(/*0*/ phaseConfig: PhaseConfig, /*1*/ phaserState: PhaserState<Data>, /*2*/ context: Context, /*3*/ output: Data): kotlin.Unit
+    private final fun runAndProfile(/*0*/ phaseConfig: PhaseConfig, /*1*/ phaserState: PhaserState<Data>, /*2*/ context: Context, /*3*/ source: Data): Data
+    public open override /*1*/ /*fake_override*/ fun toString(): kotlin.String
+}
+
+public interface PhaseConfig {
+    public abstract val needProfiling: kotlin.Boolean
+    public open override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
+    public open override /*1*/ /*fake_override*/ fun hashCode(): kotlin.Int
+    public open override /*1*/ /*fake_override*/ fun toString(): kotlin.String
+}
+
+public interface PhaserState</*0*/ Data> {
+    public abstract var depth: kotlin.Int
+    public open override /*1*/ /*fake_override*/ fun equals(/*0*/ other: kotlin.Any?): kotlin.Boolean
+    public open override /*1*/ /*fake_override*/ fun hashCode(): kotlin.Int
+    public open override /*1*/ /*fake_override*/ fun toString(): kotlin.String
+}
