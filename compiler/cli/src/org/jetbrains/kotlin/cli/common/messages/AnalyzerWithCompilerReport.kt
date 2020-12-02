@@ -42,8 +42,6 @@ import org.jetbrains.kotlin.resolve.checkers.ExperimentalUsageChecker
 import org.jetbrains.kotlin.resolve.jvm.JvmBindingContextSlices
 import org.jetbrains.kotlin.resolve.jvm.JvmClassName
 import org.jetbrains.kotlin.serialization.deserialization.IncompatibleVersionErrorData
-import java.io.PrintWriter
-import java.io.StringWriter
 
 class AnalyzerWithCompilerReport(
     private val messageCollector: MessageCollector,
@@ -114,11 +112,7 @@ class AnalyzerWithCompilerReport(
 
     override fun analyzeAndReport(files: Collection<KtFile>, analyze: () -> AnalysisResult) {
         analysisResult = analyze()
-        if (analysisResult.isError()) {
-            val stackWriter = StringWriter()
-            analysisResult.error.printStackTrace(PrintWriter(stackWriter))
-            messageCollector.report(ERROR, "Error analyzing files: $stackWriter")
-        } else {
+        if (!analysisResult.isError()) {
             ExperimentalUsageChecker.checkCompilerArguments(
                 analysisResult.moduleDescriptor, languageVersionSettings,
                 reportError = { message -> messageCollector.report(ERROR, message) },
